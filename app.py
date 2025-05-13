@@ -32,13 +32,13 @@ st.markdown("""
 
 # Create map data for EAFIT
 eafit_location = pd.DataFrame({
-    'lat': [6.2006],
-    'lon': [-75.5783],
-    'location': ['Universidad EAFIT']
+    'lat': [6.2479],
+    'lon': [-75.6081],
+    'location': ['Ubicación clasificada']
 })
 
 # Display map
-st.subheader("📍 Ubicación de los Sensores - Universidad EAFIT")
+st.subheader("📍 Ubicación de los Sensores")
 st.map(eafit_location, zoom=15)
 
 # File uploader
@@ -192,9 +192,9 @@ if uploaded_file is not None:
             
             with col1:
                 st.write("### Ubicación del Sensor")
-                st.write("**Universidad EAFIT**")
-                st.write("- Latitud: 6.2006")
-                st.write("- Longitud: -75.5783")
+                st.write("**CLASIFICADO**")
+                st.write("- Latitud: 6.2479")
+                st.write("- Longitud: -75.6081")
                 st.write("- Altitud: ~1,495 metros sobre el nivel del mar")
             
             with col2:
@@ -215,5 +215,5 @@ else:
 st.markdown("""
     ---
     Desarrollado para el análisis de datos de sensores urbanos.
-    Ubicación: Universidad EAFIT, Medellín, Colombia
+    Ubicación: CLASIFICADO, Medellín, Colombia
 """)

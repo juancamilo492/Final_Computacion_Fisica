@@ -11,14 +11,40 @@ st.set_page_config(
     layout="wide"
 )
 
-# Custom CSS
+# Custom CSS for emerald green theme
 st.markdown("""
     <style>
     .main {
         padding: 2rem;
+        background-color: #F0FFF4; /* Light emerald background */
     }
     .stAlert {
         margin-top: 1rem;
+    }
+    h1, h2, h3 {
+        color: #2E7D32; /* Emerald green for headers */
+    }
+    .stButton>button {
+        background-color: #2E7D32; /* Emerald green buttons */
+        color: white;
+        border-radius: 5px;
+    }
+    .stButton>button:hover {
+        background-color: #1B5E20; /* Darker emerald on hover */
+    }
+    .stSelectbox, .stSlider, .stRadio, .stCheckbox {
+        background-color: #E8F5E9; /* Light emerald for input backgrounds */
+        border-radius: 5px;
+    }
+    .stTabs [data-baseweb="tab"] {
+        color: #2E7D32; /* Emerald green for tabs */
+    }
+    .stTabs [data-baseweb="tab"][aria-selected="true"] {
+        color: #1B5E20; /* Darker emerald for active tab */
+        border-bottom: 2px solid #2E7D32;
+    }
+    .stMarkdown, .stDataFrame {
+        color: #1A3C34; /* Dark green for text */
     }
     </style>
 """, unsafe_allow_html=True)
@@ -68,7 +94,7 @@ if uploaded_file is not None:
             # Variable selector
             variable = st.selectbox(
                 "Seleccione variable a visualizar",
-                ["temperatura", "humedad", "Ambas variables"]
+                ["temperatura", "humedad", "Ambas variables", "Humedad < 30%"]
             )
             
             # Chart type selector
@@ -94,6 +120,18 @@ if uploaded_file is not None:
                     st.area_chart(df1["humedad"])
                 else:
                     st.bar_chart(df1["humedad"])
+            elif variable == "Humedad < 30%":
+                st.write("### Humedad Menor a 30%")
+                low_humidity_df = df1[df1["humedad"] < 30]
+                if low_humidity_df.empty:
+                    st.warning("No hay registros con humedad menor a 30%")
+                else:
+                    if chart_type == "Línea":
+                        st.line_chart(low_humidity_df["humedad"])
+                    elif chart_type == "Área":
+                        st.area_chart(low_humidity_df["humedad"])
+                    else:
+                        st.bar_chart(low_humidity_df["humedad"])
             else:
                 if chart_type == "Línea":
                     st.line_chart(df1[variable])

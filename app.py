@@ -34,15 +34,24 @@ st.markdown("""
     }
     
     h1, h2, h3 {
-        color: #1B4332;
-        text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+        color: #000000;
+        text-shadow: 1px 1px 2px rgba(255,255,255,0.5);
     }
     
     h1 {
-        background: linear-gradient(90deg, #1B4332, #2D6A4F, #40916C);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
+        color: #000000;
+        text-shadow: 1px 1px 2px rgba(255,255,255,0.5);
+    }
+    
+    /* Ensure all text is black and readable */
+    .stMarkdown, .stMarkdown p, .stMarkdown div, .stMarkdown span,
+    .stDataFrame, .stDataFrame td, .stDataFrame th,
+    .element-container, .element-container p, .element-container div,
+    .stText, .stWrite, div[data-testid="stMarkdownContainer"] p,
+    div[data-testid="stMarkdownContainer"] div, 
+    div[data-testid="stMarkdownContainer"] span,
+    .stMetric .metric-container, .stMetric label, .stMetric div {
+        color: #000000 !important;
     }
     
     .stButton>button {
@@ -80,7 +89,7 @@ st.markdown("""
     
     .stTabs [data-baseweb="tab"] {
         background: rgba(255, 255, 255, 0.7);
-        color: #1B4332;
+        color: #000000;
         border-radius: 10px 10px 0 0;
         margin-right: 5px;
         font-weight: bold;
@@ -88,7 +97,7 @@ st.markdown("""
     
     .stTabs [data-baseweb="tab"][aria-selected="true"] {
         background: linear-gradient(135deg, #74C69D, #95D5B2);
-        color: #1B4332;
+        color: #000000;
         border-bottom: 3px solid #2D6A4F;
     }
     
@@ -116,6 +125,11 @@ st.markdown("""
         border: 1px solid #74C69D;
         margin: 1rem 0;
         backdrop-filter: blur(5px);
+        color: #000000 !important;
+    }
+    
+    .info-box h3, .info-box p, .info-box ul, .info-box li {
+        color: #000000 !important;
     }
     
     .stCheckbox>label {
@@ -179,12 +193,26 @@ if uploaded_file is not None:
         # Load and process data
         df1 = pd.read_csv(uploaded_file)
         
-        # Renombrar columnas para simplificar
-        column_mapping = {
-            'temperatura {device="ESP32", name="Final_IOT"}': 'temperatura',
-            'humedad {device="ESP32", name="Final_IOT"}': 'humedad'
-        }
-        df1 = df1.rename(columns=column_mapping)
+        # Renombrar columnas para simplificar - detectar automáticamente
+        # Buscar columnas que contengan 'temperatura' y 'humedad'
+        temp_col = None
+        hum_col = None
+        
+        for col in df1.columns:
+            if 'temperatura' in col.lower():
+                temp_col = col
+            elif 'humedad' in col.lower():
+                hum_col = col
+        
+        if temp_col and hum_col:
+            column_mapping = {
+                temp_col: 'temperatura',
+                hum_col: 'humedad'
+            }
+            df1 = df1.rename(columns=column_mapping)
+        else:
+            st.error("No se encontraron las columnas de temperatura y humedad en el archivo CSV")
+            st.stop()
         
         df1['Time'] = pd.to_datetime(df1['Time'])
         df1 = df1.set_index('Time')
@@ -598,7 +626,7 @@ else:
 # Footer with nature theme
 st.markdown("""
     ---
-    <div style="text-align: center; color: #1B4332; padding: 2rem;">
+    <div style="text-align: center; color: #000000; padding: 2rem;">
     🌿 <strong>Desarrollado para el análisis de datos de sensores ambientales</strong> 🌿<br>
     📍 <strong>Ubicación:</strong> CLASIFICADO, Medellín, Colombia 🇨🇴<br>
     🌍 <em>Monitoreando nuestro entorno natural para un futuro sostenible</em> 🌱
